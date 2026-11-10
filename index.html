@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>续文魂 · 东巴识字寻宝</title>
+<link rel="stylesheet" href="css/style.css?v=28">
+</head>
+<body>
+<div id="app">
+  <!-- 动态屏幕挂载点 -->
+  <div id="screen"></div>
+
+  <!-- 全局 HUD：暂停与静音 -->
+  <div id="globalHud" class="hidden">
+    <button id="btnPause" class="icon-btn" aria-label="暂停">⏸</button>
+    <button id="btnMute" class="icon-btn" aria-label="声音">🔊</button>
+  </div>
+
+  <!-- 暂停遮罩 -->
+  <div id="pauseOverlay" class="overlay hidden">
+    <div class="panel">
+      <h2>歇一歇</h2>
+      <p class="panel-sub">莫愁在火塘边等你回来</p>
+      <button class="btn primary" id="btnResume">继续游戏</button>
+      <button class="btn" id="btnRestartLevel">重玩本关</button>
+      <button class="btn ghost" id="btnQuitTitle">回到首页</button>
+    </div>
+  </div>
+</div>
+<script>window.__errs=[];window.onerror=(m,src,l,c)=>{window.__errs.push(m+" @"+(src||"").split("/").pop()+":"+l)};</script><script src="js/glyphs.js?v=28"></script>
+<script src="js/audio.js?v=28"></script>
+<script src="js/game.js?v=28"></script>
+</body>
+</html>
