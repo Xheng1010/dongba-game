@@ -297,10 +297,13 @@ const SCENES = [
       return {
         html: h.join(''),
         rects: [
-          { x: 0, y: 0, w: 175, h: 1000 },
+          { x: 0, y: 0, w: 285, h: 300 },      // 左上海面
+          { x: 0, y: 300, w: 190, h: 380 },    // 左侧湖岸
+          { x: 0, y: 680, w: 265, h: 320 },    // 左下海面
           { x: 1060, y: 286, w: 180, h: 44 },
           { x: 772, y: 496, w: 76, h: 42 },
-          { x: 140, y: 655, w: 210, h: 110 },   // 庄稼地（整片不可踏入）
+          { x: 290, y: 655, w: 60, h: 110 },   // 庄稼地西侧水面补边
+          { x: 140, y: 655, w: 210, h: 110 },  // 庄稼地（整片不可踏入）
         ],
       };
     },
@@ -519,11 +522,11 @@ function showExplore(unlocked) {
     if (G.paused) { exRAF = requestAnimationFrame(frame); return; }
     let tx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
     let ty = (keys.d ? 1 : 0) - (keys.u ? 1 : 0);
-    if (joy.on && (Math.abs(joy.x) > 7 || Math.abs(joy.y) > 7)) { tx = joy.x / 44; ty = joy.y / 44; }
+    if (joy.on && (Math.abs(joy.x) > 7 || Math.abs(joy.y) > 7)) { const jr = JR(); tx = joy.x / jr; ty = joy.y / jr; }
     const len = Math.hypot(tx, ty);
     if (len > 1) { tx /= len; ty /= len; }
     /* 触屏设备减速，且拨杆推多少走多快 */
-    const SP = (joy.on || 'ontouchstart' in window) && !window.matchMedia('(pointer:fine)').matches ? 3.7 : 4.6;
+    const SP = (joy.on || 'ontouchstart' in window) && !window.matchMedia('(pointer:fine)').matches ? 3.2 : 4.1;
     if (quizLock) { tx = 0; ty = 0; }
     vel.x += (tx * SP - vel.x) * 0.22;
     vel.y += (ty * SP - vel.y) * 0.22;
@@ -724,7 +727,7 @@ function showExplore(unlocked) {
 
   /* 固定拨杆：指针捕获防断触，松手回中 */
   const joyBase = $('#exJoy'), joyKnob = $('#exJoyKnob');
-  const JR = 44; /* 拨杆半径 */
+  const JR = () => Math.max(24, joyBase.offsetWidth / 2 - joyKnob.offsetWidth / 2 + 2); /* 拨杆半径（随摇杆尺寸自适应） */
   const joySet = (dx, dy) => {
     joy.x = dx; joy.y = dy;
     joyKnob.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
@@ -738,15 +741,15 @@ function showExplore(unlocked) {
     joy.sx = r.left + r.width / 2; joy.sy = r.top + r.height / 2;
     joyBase.classList.add('live');
     let dx = e.clientX - joy.sx, dy = e.clientY - joy.sy;
-    const d = Math.hypot(dx, dy);
-    if (d > JR) { dx *= JR / d; dy *= JR / d; }
+    const d = Math.hypot(dx, dy), jr = JR();
+    if (d > jr) { dx *= jr / d; dy *= jr / d; }
     joySet(dx, dy);
   });
   joyBase.addEventListener('pointermove', e => {
     if (!joy.on || e.pointerId !== joy.id) return;
     let dx = e.clientX - joy.sx, dy = e.clientY - joy.sy;
-    const d = Math.hypot(dx, dy);
-    if (d > JR) { dx *= JR / d; dy *= JR / d; }
+    const d = Math.hypot(dx, dy), jr = JR();
+    if (d > jr) { dx *= jr / d; dy *= jr / d; }
     joySet(dx, dy);
   });
   joyBase.addEventListener('pointerup', joyReset);
