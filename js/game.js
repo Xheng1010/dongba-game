@@ -435,12 +435,7 @@ function showExplore(unlocked) {
       <button class="ex-gear" id="exGear" aria-label="设置">⚙️</button>
     </div>
     <div class="ex-controls">
-      <div class="ex-dpad">
-        <button class="ex-btn up" id="exUp">▲</button>
-        <button class="ex-btn left" id="exLeft">◀</button>
-        <button class="ex-btn right" id="exRight">▶</button>
-        <button class="ex-btn down" id="exDown">▼</button>
-      </div>
+      <div class="ex-joy" id="exJoy"><div class="ex-joy-knob" id="exJoyKnob"></div></div>
       <div class="ex-prompt hidden" id="exPrompt"><b id="exPromptName"></b><span id="exPromptSub">点这里开始仪式</span></div>
       <div style="width:120px;pointer-events:none"></div>
     </div>
@@ -524,10 +519,11 @@ function showExplore(unlocked) {
     if (G.paused) { exRAF = requestAnimationFrame(frame); return; }
     let tx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
     let ty = (keys.d ? 1 : 0) - (keys.u ? 1 : 0);
-    if (joy.on && (Math.abs(joy.x) > 10 || Math.abs(joy.y) > 10)) { tx = joy.x / 42; ty = joy.y / 42; }
+    if (joy.on && (Math.abs(joy.x) > 7 || Math.abs(joy.y) > 7)) { tx = joy.x / 44; ty = joy.y / 44; }
     const len = Math.hypot(tx, ty);
     if (len > 1) { tx /= len; ty /= len; }
-    const SP = 4.6;
+    /* 触屏设备减速，且拨杆推多少走多快 */
+    const SP = (joy.on || 'ontouchstart' in window) && !window.matchMedia('(pointer:fine)').matches ? 3.7 : 4.6;
     if (quizLock) { tx = 0; ty = 0; }
     vel.x += (tx * SP - vel.x) * 0.22;
     vel.y += (ty * SP - vel.y) * 0.22;
@@ -726,17 +722,35 @@ function showExplore(unlocked) {
     });
   }
 
-  /* 方向盘 */
-  const bindHold = (id, k) => {
-    const btn = $(id);
-    const start = e => { e.preventDefault(); keys[k] = 1; };
-    const stop = () => { keys[k] = 0; };
-    btn.addEventListener('pointerdown', start);
-    btn.addEventListener('pointerup', stop);
-    btn.addEventListener('pointerleave', stop);
-    btn.addEventListener('pointercancel', stop);
+  /* 固定拨杆：指针捕获防断触，松手回中 */
+  const joyBase = $('#exJoy'), joyKnob = $('#exJoyKnob');
+  const JR = 44; /* 拨杆半径 */
+  const joySet = (dx, dy) => {
+    joy.x = dx; joy.y = dy;
+    joyKnob.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
   };
-  bindHold('#exUp', 'u'); bindHold('#exDown', 'd'); bindHold('#exLeft', 'l'); bindHold('#exRight', 'r');
+  const joyReset = () => { joy.on = false; joy.id = null; joySet(0, 0); joyBase.classList.remove('live'); };
+  joyBase.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    try { joyBase.setPointerCapture(e.pointerId); } catch (err) { }
+    joy.on = true; joy.id = e.pointerId;
+    const r = joyBase.getBoundingClientRect();
+    joy.sx = r.left + r.width / 2; joy.sy = r.top + r.height / 2;
+    joyBase.classList.add('live');
+    let dx = e.clientX - joy.sx, dy = e.clientY - joy.sy;
+    const d = Math.hypot(dx, dy);
+    if (d > JR) { dx *= JR / d; dy *= JR / d; }
+    joySet(dx, dy);
+  });
+  joyBase.addEventListener('pointermove', e => {
+    if (!joy.on || e.pointerId !== joy.id) return;
+    let dx = e.clientX - joy.sx, dy = e.clientY - joy.sy;
+    const d = Math.hypot(dx, dy);
+    if (d > JR) { dx *= JR / d; dy *= JR / d; }
+    joySet(dx, dy);
+  });
+  joyBase.addEventListener('pointerup', joyReset);
+  joyBase.addEventListener('pointercancel', joyReset);
   $('#exGear').onclick = () => { Sound.click(); setPaused(true); };
 
   const keyMap = { ArrowUp: 'u', ArrowDown: 'd', ArrowLeft: 'l', ArrowRight: 'r', w: 'u', s: 'd', a: 'l', d: 'r', W: 'u', S: 'd', A: 'l', D: 'r' };
@@ -744,36 +758,6 @@ function showExplore(unlocked) {
   const keyU = e => { const k = keyMap[e.key]; if (k) keys[k] = 0; };
   window.addEventListener('keydown', keyD);
   window.addEventListener('keyup', keyU);
-
-  /* 虚拟摇杆 */
-  const scr = $('#scr-explore');
-  scr.addEventListener('pointerdown', e => {
-    if (e.target.closest('button') || e.target.closest('.ex-prompt') || e.target.closest('.level-hud')) return;
-    joy.on = true; joy.id = e.pointerId; joy.sx = e.clientX; joy.sy = e.clientY; joy.x = 0; joy.y = 0;
-    joy.el = document.createElement('div');
-    joy.el.className = 'vx-joy';
-    joy.el.style.left = joy.sx + 'px';
-    joy.el.style.top = joy.sy + 'px';
-    joy.knob = document.createElement('div');
-    joy.knob.className = 'vx-joy-knob';
-    joy.el.appendChild(joy.knob);
-    scr.appendChild(joy.el);
-  });
-  scr.addEventListener('pointermove', e => {
-    if (!joy.on || e.pointerId !== joy.id) return;
-    let dx = e.clientX - joy.sx, dy = e.clientY - joy.sy;
-    const d = Math.hypot(dx, dy);
-    if (d > 42) { dx *= 42 / d; dy *= 42 / d; }
-    joy.x = dx; joy.y = dy;
-    if (joy.knob) joy.knob.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
-  });
-  const joyEnd = e => {
-    if (e.pointerId !== joy.id) return;
-    joy.on = false; joy.x = 0; joy.y = 0;
-    if (joy.el) { joy.el.remove(); joy.el = null; joy.knob = null; }
-  };
-  scr.addEventListener('pointerup', joyEnd);
-  scr.addEventListener('pointercancel', joyEnd);
 
   prompt.onclick = () => {
     if (!near) return;
