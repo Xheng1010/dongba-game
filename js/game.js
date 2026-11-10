@@ -34,7 +34,7 @@ function sparks(x, y, n = 12) {
     s.className = 'spark';
     const sz = 4 + Math.random() * 5;
     s.style.cssText = `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;--dx:${(Math.random() - .5) * 160}px;--dy:${(Math.random() - .5) * 160}px`;
-    document.getElementById('app').appendChild(s);
+    document.body.appendChild(s);
     setTimeout(() => s.remove(), 750);
   }
 }
@@ -154,7 +154,7 @@ function toast(msg) {
   const t = document.createElement('div');
   t.className = 'toast';
   t.textContent = msg;
-  document.getElementById('app').appendChild(t);
+  document.body.appendChild(t);
   setTimeout(() => t.remove(), 1450);
 }
 
@@ -195,18 +195,16 @@ function showTitle() {
     <div class="title-hero">
       <div class="hero-medal"><div class="hero-ring"></div><img src="assets/girl.jpg" alt="莫愁"></div>
     </div>
-    <div class="title-col">
-      <h1 class="game-title">续文魂 · 东巴识字寻宝</h1>
-      <p class="game-sub">唤醒纳西东巴文脉星光</p>
-      <p class="title-record">${best}</p>
-      <div class="title-btns">
-        <button class="btn primary" id="btnStart">开始闯关</button>
-        <div class="title-row">
-          <button class="btn half" id="btnCodex">📖 字灵图鉴</button>
-          <button class="btn half" id="btnAch">🏆 成就</button>
-        </div>
-        <button class="btn ghost" id="btnHow">怎么玩</button>
+    <h1 class="game-title">续文魂 · 东巴识字寻宝</h1>
+    <p class="game-sub">唤醒纳西东巴文脉星光</p>
+    <p class="title-record">${best}</p>
+    <div class="title-btns">
+      <button class="btn primary" id="btnStart">开始闯关</button>
+      <div class="title-row">
+        <button class="btn half" id="btnCodex">📖 字灵图鉴</button>
+        <button class="btn half" id="btnAch">🏆 成就</button>
       </div>
+      <button class="btn ghost" id="btnHow">怎么玩</button>
     </div>
   </div>`;
   $('#btnStart').onclick = () => { Sound.unlock(); Sound.click(); startRun(); };
@@ -474,7 +472,6 @@ function showExplore(unlocked) {
   }
   const keys = { u: 0, d: 0, l: 0, r: 0 };
   const joy = { on: false, id: null, sx: 0, sy: 0, x: 0, y: 0, el: null, knob: null };
-  let JR = 44; /* 拨杆行程，按摇杆实际尺寸取 */
   const vel = { x: 0, y: 0 };
   let near = false, quizLock = false, lastDir = 'd';
   const flyers = [...document.querySelectorAll('.vx-flypage')].map((el, i) => ({
@@ -522,7 +519,7 @@ function showExplore(unlocked) {
     if (G.paused) { exRAF = requestAnimationFrame(frame); return; }
     let tx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
     let ty = (keys.d ? 1 : 0) - (keys.u ? 1 : 0);
-    if (joy.on && (Math.abs(joy.x) > 7 || Math.abs(joy.y) > 7)) { tx = joy.x / JR; ty = joy.y / JR; }
+    if (joy.on && (Math.abs(joy.x) > 7 || Math.abs(joy.y) > 7)) { tx = joy.x / 44; ty = joy.y / 44; }
     const len = Math.hypot(tx, ty);
     if (len > 1) { tx /= len; ty /= len; }
     /* 触屏设备减速，且拨杆推多少走多快 */
@@ -646,7 +643,7 @@ function showExplore(unlocked) {
         ${opts.map(o => `<button class="option" data-id="${o.id}">${o.word}</button>`).join('')}
       </div>
     </div>`;
-    document.getElementById('app').appendChild(ov);
+    document.body.appendChild(ov);
     ov.querySelectorAll('.option').forEach(btn => {
       btn.onclick = () => {
         if (btn.dataset.id === g.id) {
@@ -685,7 +682,7 @@ function showExplore(unlocked) {
         ${opts.map(o => `<button class="option" data-id="${o.id}" style="font-size:.95rem">${o.word}</button>`).join('')}
       </div>
     </div>`;
-    document.getElementById('app').appendChild(ov);
+    document.body.appendChild(ov);
     ov.querySelectorAll('.option').forEach(btn => {
       btn.onclick = () => {
         if (btn.dataset.id === g.id) {
@@ -727,7 +724,7 @@ function showExplore(unlocked) {
 
   /* 固定拨杆：指针捕获防断触，松手回中 */
   const joyBase = $('#exJoy'), joyKnob = $('#exJoyKnob');
-  JR = Math.max(26, joyBase.offsetWidth / 2 - joyKnob.offsetWidth / 2 + 2);
+  const JR = 44; /* 拨杆半径 */
   const joySet = (dx, dy) => {
     joy.x = dx; joy.y = dy;
     joyKnob.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
@@ -1147,7 +1144,7 @@ function openDoorQuiz(doorEl) {
     </div>
     <button class="btn ghost" id="tombCancel" style="margin-top:.9rem">先去看看别的</button>
   </div>`;
-  document.getElementById('app').appendChild(ov);
+  document.body.appendChild(ov);
   $('#tombCancel', ov).onclick = () => { Sound.click(); ov.remove(); };
   ov.querySelectorAll('.tomb-opt').forEach(btn => {
     btn.onclick = () => {

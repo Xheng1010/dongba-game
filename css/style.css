@@ -18,26 +18,12 @@
 html,body{height:100%;overflow:hidden}
 body{
   font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  background:#04060e;color:var(--paper);
+  background:var(--ink);color:var(--paper);
   touch-action:manipulation;user-select:none;-webkit-user-select:none;
-  display:flex;align-items:center;justify-content:center;height:100%;
 }
-/* 16:9 舞台：任何设备上都居中呈现，多余空间作氛围留边 */
-#app{
-  position:relative;display:flex;flex-direction:column;
-  width:min(100vw,calc(100vh * 16 / 9));
-  height:min(100vh,calc(100vw * 9 / 16));
-  overflow:hidden;background:var(--ink);
-  box-shadow:0 0 0 1px rgba(245,201,107,.22),0 0 60px rgba(245,201,107,.07);
-  container-type:size;container-name:stage;
-}
-@media (max-aspect-ratio:16/9){#app{box-shadow:none}}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
 #screen{flex:1;position:relative;overflow:hidden}
 .hidden{display:none!important}
-/* 细滚动条 */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-thumb{background:rgba(245,201,107,.35);border-radius:3px}
-::-webkit-scrollbar-track{background:transparent}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
 /* ---------- 字形渲染：线条(手绘)与填充(博物馆真迹) ---------- */
@@ -72,7 +58,7 @@ svg.gr *{fill:currentColor;stroke:none}
 .icon-btn:active{transform:scale(.92)}
 
 .overlay{
-  position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
   background:rgba(5,8,18,.78);backdrop-filter:blur(8px);padding:1.2rem;
 }
 .panel{
@@ -90,7 +76,7 @@ svg.gr *{fill:currentColor;stroke:none}
 .panel-sub{font-size:.88rem;color:rgba(245,240,230,.65);margin-bottom:1.1rem;line-height:1.9}
 
 #globalHud{
-  position:absolute;top:calc(.7rem + var(--safe-top));right:.8rem;z-index:50;
+  position:fixed;top:calc(.7rem + var(--safe-top));right:.8rem;z-index:50;
   display:flex;gap:.5rem;
 }
 
@@ -150,24 +136,10 @@ svg.gr *{fill:currentColor;stroke:none}
   -webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 0 18px rgba(245,201,107,.45));
 }
-.game-sub{font-size:.88rem;color:rgba(245,240,230,.72);letter-spacing:.34em;margin:.4rem 0 .2rem;font-family:var(--serif);white-space:nowrap}
+.game-sub{font-size:.88rem;color:rgba(245,240,230,.72);letter-spacing:.34em;margin:.4rem 0 .2rem;font-family:var(--serif)}
 .game-sub::before,.game-sub::after{content:"——";color:var(--gold-soft);letter-spacing:0;margin:0 .5em}
 .title-record{font-size:.8rem;color:var(--c-yellow);min-height:1.2em;margin-bottom:.6rem}
 .title-btns{width:min(88vw,340px);margin:0 auto}
-.title-col{display:flex;flex-direction:column;align-items:center;min-width:0}
-/* 16:9 矮舞台：封面改左右分栏（按舞台实际高度判断） */
-@container stage (max-height:620px){
-  #scr-title{flex-direction:row;align-items:center;justify-content:center;gap:3.5vw;text-align:center;padding:1rem 3vw}
-  .title-hero{flex:none;display:flex;align-items:center}
-  .hero-medal{width:min(46vh,220px)}
-  .game-title{font-size:clamp(1.3rem,4.6vh,1.9rem);margin-top:0}
-  .game-sub{font-size:.76rem;margin:.3rem 0 .1rem}
-  .title-record{margin-bottom:.3rem}
-  .title-btns{width:min(38vw,320px)}
-  .btn{padding:.7rem 1.2rem;margin:.32rem 0;font-size:.95rem}
-  .float-glyph{display:none}
-  .float-glyph:nth-of-type(-n+6){display:block}
-}
 .torch{position:absolute;left:8%;bottom:38%;font-size:2rem;animation:flick 1.6s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(255,160,60,.9))}
 @keyframes flick{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.12) rotate(3deg)}}
 .ember{position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;
@@ -293,7 +265,7 @@ svg.gr *{fill:currentColor;stroke:none}
 #matchLines line{stroke-width:3.5;stroke-linecap:round;filter:drop-shadow(0 0 6px currentColor)}
 .match-timer{text-align:center;font-size:.85rem;color:var(--c-yellow);margin-bottom:.4rem}
 .toast{
-  position:absolute;left:50%;top:38%;transform:translateX(-50%);z-index:70;
+  position:fixed;left:50%;top:38%;transform:translateX(-50%);z-index:70;
   background:rgba(20,10,10,.9);border:1px solid var(--c-red);color:#f2b8b0;
   padding:.6rem 1.2rem;border-radius:999px;font-size:.9rem;pointer-events:none;
   animation:toastIn 1.4s ease forwards;
@@ -502,7 +474,7 @@ svg.gr *{fill:currentColor;stroke:none}
 /* 人物（AI 序列帧精灵） */
 .vx-girl{position:absolute;width:0;height:0;pointer-events:none;transform:translateY(-100%)}
 .vx-swrap{position:absolute;left:0;bottom:-6px;transform:translateX(-50%)}
-.vx-walk-sprite{display:block;height:118px;width:auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.55))}
+.vx-walk-sprite{display:block;height:160px;width:auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.55))}
 .vx-girl:not(.walk) .vx-swrap{animation:spriteIdleBob 2.6s ease-in-out infinite}
 @keyframes spriteIdleBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-3px)}}
 /* 开场剧情对话 */
@@ -534,7 +506,7 @@ svg.gr *{fill:currentColor;stroke:none}
 .vx-moonglow{position:absolute;top:-140px;right:-120px;width:380px;height:380px;border-radius:50%;pointer-events:none;z-index:9001;background:radial-gradient(circle,rgba(210,225,255,.14),transparent 65%)}
 
 .ex-top{position:absolute;top:calc(.6rem + var(--safe-top));left:.9rem;right:.9rem;z-index:9100}
-.ex-controls{position:absolute;left:0;right:0;bottom:calc(1.6rem + var(--safe-bottom));z-index:9100;display:flex;justify-content:space-between;align-items:flex-end;padding:0 3.2rem;pointer-events:none}
+.ex-controls{position:absolute;left:0;right:0;bottom:calc(.9rem + var(--safe-bottom));z-index:9100;display:flex;justify-content:space-between;align-items:flex-end;padding:0 1.1rem;pointer-events:none}
 .ex-joy{pointer-events:auto;position:relative;width:128px;height:128px;border-radius:50%;touch-action:none;
   background:radial-gradient(circle,rgba(14,20,14,.55) 62%,rgba(14,20,14,.75));
   border:1.5px solid rgba(245,201,107,.45);backdrop-filter:blur(6px);
@@ -603,7 +575,7 @@ svg.gr *{fill:currentColor;stroke:none}
 .ritual-opt.right{background:rgba(120,200,120,.25);border-color:#7fc97f;color:#c9f2c9}
 .ritual-opt.bad{background:rgba(224,85,72,.22);border-color:var(--c-red);color:#f2a49d;animation:shake .4s}
 .title-row{display:flex;gap:.6rem}
-.btn.half{margin:.45rem 0;font-size:.95rem;white-space:nowrap;padding-left:.5rem;padding-right:.5rem}
+.btn.half{margin:.45rem 0;font-size:.95rem}
 
 /* ---------- 过关 / 胜利 ---------- */
 #scr-clear,#scr-victory{justify-content:center;text-align:center}
@@ -634,51 +606,9 @@ svg.gr *{fill:currentColor;stroke:none}
   .glyph-card{width:220px}
   .tomb-doors{max-width:680px;margin:0 auto;left:0;right:0}
 }
-@container stage (max-height:620px){
-  .glyph-card{width:min(30cqh,200px)}
-  /* 矮舞台下所有弹层面板限高可滚 */
-  .panel{max-height:calc(100cqh - 1.6rem);overflow-y:auto;padding:1.1rem 1.2rem}
-  .overlay{padding:.7rem}
-  /* 第一关压缩 */
-  .glyph-card{width:min(34cqh,190px);margin-bottom:.45rem}
-  .quiz-timer{width:min(50cqw,340px)}
-  .quiz-hint{margin-bottom:.45rem;font-size:.82rem}
-  .options{width:min(60cqw,360px);gap:.45rem}
-  .option{padding:.55rem .3rem;font-size:.95rem}
-  .ctx-sentence{width:min(60cqw,380px);margin-bottom:.45rem;font-size:.88rem;line-height:1.5;padding:.4rem .8rem}
-  .combo-fire{margin-top:.25rem}
-  .reveal-glyph{width:26cqh;height:26cqh;margin-bottom:.5rem}
-  .reveal-word{font-size:1.3rem}
-  .reveal-hanzi{margin:.25rem 0 .6rem}
-  /* 第二关压缩 */
-  .match-col{gap:.35rem}
-  .match-item{min-height:0;height:calc((100cqh - 200px) / 7);font-size:.9rem}
-  .match-item svg{width:30px;height:30px}
-  /* 第三关压缩 */
-  .tomb-doors{padding:calc(5cqh + var(--safe-top)) 17cqw calc(5cqh + var(--safe-bottom));gap:2cqw}
-  .riddle{font-size:.95rem;line-height:1.55;padding:.45rem .7rem}
-  /* 第四关压缩 */
-  .trace-wrap{width:min(52cqh,300px)}
-  .trace-progress,.trace-btns{width:min(52cqh,300px)}
-  /* 关卡开场页压缩 */
-  #scr-intro{padding-top:.6rem}
-  .map-path{margin-bottom:.5rem;transform:scale(.82);transform-origin:top center}
-  .intro-girl{width:72px;height:72px;margin-bottom:.4rem}
-  .intro-level{font-size:.72rem}
-  .intro-name{font-size:1.25rem;margin:.3rem 0 .4rem}
-  .intro-story{font-size:.82rem;line-height:1.65;margin-bottom:.7rem}
-  /* 探索场景压缩：HUD / 章节标题 / 对话 / 拨杆 */
-  .level-hud{gap:.45rem;margin-bottom:.35rem;padding-right:5rem}
-  .hud-bubble{font-size:.78rem;padding:.3rem .6rem}
-  .vx-chapter{top:14%}
-  .vx-chapter b{font-size:clamp(1rem,7cqh,1.5rem);letter-spacing:.22em}
-  .vx-chapter span{margin-top:.25rem;font-size:.68rem}
-  .vx-dialog{width:min(430px,68%);padding:.45rem .8rem .35rem;bottom:calc(4.6rem + var(--safe-bottom));border-radius:11px}
-  .vx-dialog-text{font-size:.8rem;line-height:1.45;min-height:1.4em}
-  .vx-dialog-tip{margin-top:.15rem;font-size:.62rem}
-  .ex-joy{width:96px;height:96px}
-  .ex-joy-knob{width:40px;height:40px}
-  .ex-controls{padding:0 2.2rem;bottom:calc(1.1rem + var(--safe-bottom))}
+@media (max-height:560px){
+  .glyph-card{width:min(30vh,200px)}
+  .hero-medal{width:min(30vw,220px)}
 }
 
 /* ---------- 章节场景地形 ---------- */
