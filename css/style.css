@@ -603,7 +603,7 @@ svg.gr *{fill:currentColor;stroke:none}
 .ritual-opt.right{background:rgba(120,200,120,.25);border-color:#7fc97f;color:#c9f2c9}
 .ritual-opt.bad{background:rgba(224,85,72,.22);border-color:var(--c-red);color:#f2a49d;animation:shake .4s}
 .title-row{display:flex;gap:.6rem}
-.btn.half{margin:.45rem 0;font-size:.95rem}
+.btn.half{margin:.45rem 0;font-size:.95rem;white-space:nowrap;padding-left:.5rem;padding-right:.5rem}
 
 /* ---------- 过关 / 胜利 ---------- */
 #scr-clear,#scr-victory{justify-content:center;text-align:center}
@@ -660,6 +660,25 @@ svg.gr *{fill:currentColor;stroke:none}
   /* 第四关压缩 */
   .trace-wrap{width:min(52cqh,300px)}
   .trace-progress,.trace-btns{width:min(52cqh,300px)}
+  /* 关卡开场页压缩 */
+  #scr-intro{padding-top:.6rem}
+  .map-path{margin-bottom:.5rem;transform:scale(.82);transform-origin:top center}
+  .intro-girl{width:72px;height:72px;margin-bottom:.4rem}
+  .intro-level{font-size:.72rem}
+  .intro-name{font-size:1.25rem;margin:.3rem 0 .4rem}
+  .intro-story{font-size:.82rem;line-height:1.65;margin-bottom:.7rem}
+  /* 探索场景压缩：HUD / 章节标题 / 对话 / 拨杆 */
+  .level-hud{gap:.45rem;margin-bottom:.35rem;padding-right:5rem}
+  .hud-bubble{font-size:.78rem;padding:.3rem .6rem}
+  .vx-chapter{top:14%}
+  .vx-chapter b{font-size:clamp(1rem,7cqh,1.5rem);letter-spacing:.22em}
+  .vx-chapter span{margin-top:.25rem;font-size:.68rem}
+  .vx-dialog{width:min(430px,68%);padding:.45rem .8rem .35rem;bottom:calc(4.6rem + var(--safe-bottom));border-radius:11px}
+  .vx-dialog-text{font-size:.8rem;line-height:1.45;min-height:1.4em}
+  .vx-dialog-tip{margin-top:.15rem;font-size:.62rem}
+  .ex-joy{width:96px;height:96px}
+  .ex-joy-knob{width:40px;height:40px}
+  .ex-controls{padding:0 2.2rem;bottom:calc(1.1rem + var(--safe-bottom))}
 }
 
 /* ---------- 章节场景地形 ---------- */

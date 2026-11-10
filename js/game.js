@@ -474,6 +474,7 @@ function showExplore(unlocked) {
   }
   const keys = { u: 0, d: 0, l: 0, r: 0 };
   const joy = { on: false, id: null, sx: 0, sy: 0, x: 0, y: 0, el: null, knob: null };
+  let JR = 44; /* 拨杆行程，按摇杆实际尺寸取 */
   const vel = { x: 0, y: 0 };
   let near = false, quizLock = false, lastDir = 'd';
   const flyers = [...document.querySelectorAll('.vx-flypage')].map((el, i) => ({
@@ -521,7 +522,7 @@ function showExplore(unlocked) {
     if (G.paused) { exRAF = requestAnimationFrame(frame); return; }
     let tx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
     let ty = (keys.d ? 1 : 0) - (keys.u ? 1 : 0);
-    if (joy.on && (Math.abs(joy.x) > 7 || Math.abs(joy.y) > 7)) { tx = joy.x / 44; ty = joy.y / 44; }
+    if (joy.on && (Math.abs(joy.x) > 7 || Math.abs(joy.y) > 7)) { tx = joy.x / JR; ty = joy.y / JR; }
     const len = Math.hypot(tx, ty);
     if (len > 1) { tx /= len; ty /= len; }
     /* 触屏设备减速，且拨杆推多少走多快 */
@@ -726,7 +727,7 @@ function showExplore(unlocked) {
 
   /* 固定拨杆：指针捕获防断触，松手回中 */
   const joyBase = $('#exJoy'), joyKnob = $('#exJoyKnob');
-  const JR = 44; /* 拨杆半径 */
+  JR = Math.max(26, joyBase.offsetWidth / 2 - joyKnob.offsetWidth / 2 + 2);
   const joySet = (dx, dy) => {
     joy.x = dx; joy.y = dy;
     joyKnob.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
