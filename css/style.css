@@ -507,7 +507,7 @@ svg.gr *{fill:currentColor;stroke:none}
 .vx-moonglow{position:absolute;top:-140px;right:-120px;width:380px;height:380px;border-radius:50%;pointer-events:none;z-index:9001;background:radial-gradient(circle,rgba(210,225,255,.14),transparent 65%)}
 
 .ex-top{position:absolute;top:calc(.6rem + var(--safe-top));left:.9rem;right:.9rem;z-index:9100}
-.ex-controls{position:absolute;left:0;right:0;bottom:calc(2rem + var(--safe-bottom));z-index:9100;display:flex;justify-content:space-between;align-items:flex-end;padding:0 1.1rem 0 1.9rem;pointer-events:none}
+.ex-controls{position:absolute;left:0;right:0;bottom:calc(2rem + var(--safe-bottom));z-index:9100;display:flex;justify-content:space-between;align-items:flex-end;padding:0 1.9rem 0 1.1rem;pointer-events:none}
 .ex-joy{pointer-events:auto;position:relative;width:clamp(104px,33vw,132px);height:clamp(104px,33vw,132px);border-radius:50%;touch-action:none;
   background:radial-gradient(circle,rgba(14,20,14,.55) 62%,rgba(14,20,14,.75));
   border:1.5px solid rgba(245,201,107,.45);backdrop-filter:blur(6px);

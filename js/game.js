@@ -438,9 +438,9 @@ function showExplore(unlocked) {
       <button class="ex-gear" id="exGear" aria-label="设置">⚙️</button>
     </div>
     <div class="ex-controls">
-      <div class="ex-joy" id="exJoy"><div class="ex-joy-knob" id="exJoyKnob"></div></div>
-      <div class="ex-prompt hidden" id="exPrompt"><b id="exPromptName"></b><span id="exPromptSub">点这里开始仪式</span></div>
       <div style="width:120px;pointer-events:none"></div>
+      <div class="ex-prompt hidden" id="exPrompt"><b id="exPromptName"></b><span id="exPromptSub">点这里开始仪式</span></div>
+      <div class="ex-joy" id="exJoy"><div class="ex-joy-knob" id="exJoyKnob"></div></div>
     </div>
     ${def.intro ? `<div class="vx-dialog" id="vxDialog"><div class="vx-dialog-text" id="vxDialogText"></div><div class="vx-dialog-tip">点击继续 ▸</div></div>` : ''}
   </div>`;
