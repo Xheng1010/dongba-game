@@ -34,7 +34,7 @@ function sparks(x, y, n = 12) {
     s.className = 'spark';
     const sz = 4 + Math.random() * 5;
     s.style.cssText = `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;--dx:${(Math.random() - .5) * 160}px;--dy:${(Math.random() - .5) * 160}px`;
-    document.body.appendChild(s);
+    document.getElementById('app').appendChild(s);
     setTimeout(() => s.remove(), 750);
   }
 }
@@ -154,7 +154,7 @@ function toast(msg) {
   const t = document.createElement('div');
   t.className = 'toast';
   t.textContent = msg;
-  document.body.appendChild(t);
+  document.getElementById('app').appendChild(t);
   setTimeout(() => t.remove(), 1450);
 }
 
@@ -195,16 +195,18 @@ function showTitle() {
     <div class="title-hero">
       <div class="hero-medal"><div class="hero-ring"></div><img src="assets/girl.jpg" alt="莫愁"></div>
     </div>
-    <h1 class="game-title">续文魂 · 东巴识字寻宝</h1>
-    <p class="game-sub">唤醒纳西东巴文脉星光</p>
-    <p class="title-record">${best}</p>
-    <div class="title-btns">
-      <button class="btn primary" id="btnStart">开始闯关</button>
-      <div class="title-row">
-        <button class="btn half" id="btnCodex">📖 字灵图鉴</button>
-        <button class="btn half" id="btnAch">🏆 成就</button>
+    <div class="title-col">
+      <h1 class="game-title">续文魂 · 东巴识字寻宝</h1>
+      <p class="game-sub">唤醒纳西东巴文脉星光</p>
+      <p class="title-record">${best}</p>
+      <div class="title-btns">
+        <button class="btn primary" id="btnStart">开始闯关</button>
+        <div class="title-row">
+          <button class="btn half" id="btnCodex">📖 字灵图鉴</button>
+          <button class="btn half" id="btnAch">🏆 成就</button>
+        </div>
+        <button class="btn ghost" id="btnHow">怎么玩</button>
       </div>
-      <button class="btn ghost" id="btnHow">怎么玩</button>
     </div>
   </div>`;
   $('#btnStart').onclick = () => { Sound.unlock(); Sound.click(); startRun(); };
@@ -643,7 +645,7 @@ function showExplore(unlocked) {
         ${opts.map(o => `<button class="option" data-id="${o.id}">${o.word}</button>`).join('')}
       </div>
     </div>`;
-    document.body.appendChild(ov);
+    document.getElementById('app').appendChild(ov);
     ov.querySelectorAll('.option').forEach(btn => {
       btn.onclick = () => {
         if (btn.dataset.id === g.id) {
@@ -682,7 +684,7 @@ function showExplore(unlocked) {
         ${opts.map(o => `<button class="option" data-id="${o.id}" style="font-size:.95rem">${o.word}</button>`).join('')}
       </div>
     </div>`;
-    document.body.appendChild(ov);
+    document.getElementById('app').appendChild(ov);
     ov.querySelectorAll('.option').forEach(btn => {
       btn.onclick = () => {
         if (btn.dataset.id === g.id) {
@@ -1144,7 +1146,7 @@ function openDoorQuiz(doorEl) {
     </div>
     <button class="btn ghost" id="tombCancel" style="margin-top:.9rem">先去看看别的</button>
   </div>`;
-  document.body.appendChild(ov);
+  document.getElementById('app').appendChild(ov);
   $('#tombCancel', ov).onclick = () => { Sound.click(); ov.remove(); };
   ov.querySelectorAll('.tomb-opt').forEach(btn => {
     btn.onclick = () => {
